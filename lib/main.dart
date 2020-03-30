@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Expense Tracker',
       theme: ThemeData(
-        primarySwatch: Colors.brown,
+        primarySwatch: Colors.blue,
       ),
       home: MyHomePage(
         title: 'Expense Tracker',
@@ -72,12 +72,38 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _deleteTransaction(index) {
-    setState(() => _userTransactions.removeAt(index));
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text(
+            "Confirm Delete?",
+            style: TextStyle(),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Yes"),
+              onPressed: () {
+                setState(() => _userTransactions.removeAt(index));
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
+      isScrollControlled: true,
       builder: (_) {
         return GestureDetector(
           onTap: () {},
@@ -98,8 +124,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+        mediaQuery.orientation == Orientation.landscape;
     if (!isLandscape) {
       _showChart = true;
     }
@@ -116,12 +143,14 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     return Scaffold(
       appBar: appBar,
-      floatingActionButton: isLandscape ? null : FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          _startAddNewTransaction(context);
-        },
-      ),
+      floatingActionButton: isLandscape
+          ? null
+          : FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                _startAddNewTransaction(context);
+              },
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: _userTransactions.isEmpty
           ? LayoutBuilder(builder: (ctx, constraints) {
@@ -162,8 +191,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   if (isLandscape)
                     Container(
-                      height: (MediaQuery.of(context).size.height -
-                              MediaQuery.of(context).padding.top -
+                      height: (mediaQuery.size.height -
+                              mediaQuery.padding.top -
                               appBar.preferredSize.height) *
                           0.2,
                       child: Row(
@@ -183,16 +212,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   if (_showChart || !isLandscape)
                     Container(
-                      height: (MediaQuery.of(context).size.height -
-                              MediaQuery.of(context).padding.top -
+                      height: (mediaQuery.size.height -
+                              mediaQuery.padding.top -
                               appBar.preferredSize.height) *
                           ((isLandscape) ? 0.8 : 0.25),
                       child: Chart(_recentTransactions),
                     ),
                   if (!_showChart || !isLandscape)
                     Container(
-                      height: (MediaQuery.of(context).size.height -
-                              MediaQuery.of(context).padding.top -
+                      height: (mediaQuery.size.height -
+                              mediaQuery.padding.top -
                               appBar.preferredSize.height) *
                           (isLandscape ? 0.8 : 0.75),
                       child: TransactionList(
