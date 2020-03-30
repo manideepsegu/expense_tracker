@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 // To disable landscape mode
 // import 'package:flutter/services.dart';
@@ -77,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (_) {
         return AlertDialog(
           title: Text(
-            "Confirm Delete?",
+            "Delete Transaction?",
             style: TextStyle(),
           ),
           actions: <Widget>[
@@ -143,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     return Scaffold(
       appBar: appBar,
-      floatingActionButton: isLandscape
+      floatingActionButton: isLandscape || Platform.isIOS
           ? null
           : FloatingActionButton(
               child: Icon(Icons.add),
@@ -198,7 +200,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Switch(
+                          Switch.adaptive(
+                            activeColor: Theme.of(context).primaryColorLight,
                             value: _showChart,
                             onChanged: (val) {
                               setState(() {
