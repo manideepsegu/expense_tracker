@@ -52,7 +52,7 @@ class MyHomePage extends StatefulWidget {
   }
 
   @override
-  _MyHomePageState createState() => _MyHomePageState(initialTx);
+  _MyHomePageState createState() => _MyHomePageState([]);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text("No"),
               onPressed: () {
                 Navigator.of(context).pop();
-              },
+              }
             ),
           ],
         );
