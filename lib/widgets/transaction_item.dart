@@ -1,17 +1,41 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
 
-class TransactionListItem extends StatelessWidget {
-  const TransactionListItem({
+class TransactionItem extends StatefulWidget {
+  const TransactionItem({
     Key key,
     @required this.transaction,
     @required Function deleteTransaction,
-  }) : _deleteTransaction = deleteTransaction, super(key: key);
+  })  : _deleteTransaction = deleteTransaction,
+        super(key: key);
 
   final Transaction transaction;
   final Function _deleteTransaction;
+
+  @override
+  _TransactionItemState createState() => _TransactionItemState();
+}
+
+class _TransactionItemState extends State<TransactionItem> {
+
+  var _txnColor;
+
+  @override
+  void initState() {
+    super.initState();
+    List<Color> _randColors = [
+      Colors.blue,
+      Colors.red,
+      Colors.purple,
+      Colors.green,
+      Colors.orange,
+    ];
+    _txnColor = _randColors.elementAt(Random().nextInt(_randColors.length));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +47,21 @@ class TransactionListItem extends StatelessWidget {
       ),
       child: ListTile(
         leading: CircleAvatar(
+          backgroundColor: _txnColor,
           radius: 30,
           child: Padding(
             padding: const EdgeInsets.all(6.0),
             child: FittedBox(
-              child: Text("\$${transaction.amount}"),
+              child: Text("\$${widget.transaction.amount}"),
             ),
           ),
         ),
         title: Text(
-          '${transaction.title}',
+          '${widget.transaction.title}',
           style: Theme.of(context).textTheme.title,
         ),
         subtitle: Text(
-          DateFormat.yMMMd().format(transaction.date),
+          DateFormat.yMMMd().format(widget.transaction.date),
           style: Theme.of(context).textTheme.subtitle,
         ),
         trailing: MediaQuery.of(context).orientation == Orientation.landscape
@@ -45,14 +70,14 @@ class TransactionListItem extends StatelessWidget {
                 label: Text("Delete"),
                 textColor: Theme.of(context).errorColor,
                 onPressed: () {
-                  _deleteTransaction(transaction.id);
+                  widget._deleteTransaction(widget.transaction.id);
                 },
               )
             : IconButton(
                 icon: Icon(Icons.delete),
                 color: Theme.of(context).errorColor,
                 onPressed: () {
-                  _deleteTransaction(transaction.id);
+                  widget._deleteTransaction(widget.transaction.id);
                 },
               ),
       ),

@@ -2,7 +2,7 @@ import 'package:expense_tracker/models/transaction.dart';
 import 'package:flutter/material.dart';
 
 import '../models/transaction.dart';
-import 'transaction_list_item.dart';
+import 'transaction_item.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
@@ -12,14 +12,16 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (ctx, index) {
-        return TransactionListItem(
-          transaction: transactions[index],
-          deleteTransaction: _deleteTransaction,
-        );
-      },
-      itemCount: transactions.length,
+    return ListView(
+      children: transactions.map(
+        (tx) {
+          return TransactionItem(
+            key: ValueKey(tx.id),
+            transaction: tx,
+            deleteTransaction: _deleteTransaction,
+          );
+        },
+      ).toList(),
     );
   }
 }
