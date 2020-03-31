@@ -52,7 +52,7 @@ class MyHomePage extends StatefulWidget {
   }
 
   @override
-  _MyHomePageState createState() => _MyHomePageState([]);
+  _MyHomePageState createState() => _MyHomePageState(initialTx);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _deleteTransaction(index) {
+  void _deleteTransaction(String id) {
     showDialog(
       context: context,
       builder: (_) {
@@ -86,16 +86,19 @@ class _MyHomePageState extends State<MyHomePage> {
             FlatButton(
               child: Text("Yes"),
               onPressed: () {
-                setState(() => _userTransactions.removeAt(index));
+                setState(
+                  () => _userTransactions.removeWhere((tx) {
+                    return tx.id == id;
+                  }),
+                );
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child: Text("No"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }
-            ),
+                child: Text("No"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
           ],
         );
       },
@@ -127,8 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final isLandscape =
-        mediaQuery.orientation == Orientation.landscape;
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
     if (!isLandscape) {
       _showChart = true;
     }
